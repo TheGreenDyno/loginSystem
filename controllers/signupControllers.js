@@ -1,4 +1,5 @@
 const User = require('../modules/userModule')//module import
+const { setUser } = require('../auth')
 function displaySignupPage(req, res) {
     res.render('signup')
 }
@@ -9,7 +10,7 @@ async function handleUserSignup(req, res) {
     try {
         const userData = await User.create({
             username: userInfo.username,
-            password: userInfo.password
+            password: await setUser(userInfo.password)
         })
         console.log(`user creation successful. Data: ${userData}`)
         return res.render('login')
