@@ -1,10 +1,12 @@
 const express = require('express')
 const app = express()
-const signupRouter = express.Router()
+const cookieParser = require('cookie-parser')
+const restrictToUserOnly = require('./middlewares/authMiddleware')
 const connectToDB = require('./connection')
 
 //parser
 app.use(express.urlencoded({extended:true}))
+app.use(cookieParser())
 //db connection..............
 connectToDB('mongodb://127.0.0.1:27017/loginSystem')
     .then(()=>{
@@ -26,7 +28,7 @@ app.use('/signup', singupRoutes)
 app.use('/login', loginRoutes)
 
 //root page(Homepage)
-app.get('/', (req, res) => {
+app.get('/',restrictToUserOnly,(req, res) => {
     res.send('this is home page')
 })
 
